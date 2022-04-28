@@ -24,9 +24,14 @@ print (chemical_df)
 #print(chemical_id[1])
 #print(chemical_id[0].keys())
 
+hash_map ={}
 for x in chemical_df.chemical_id:
     flapjack_post_chemical_name_request(x)
+    flapjack_id = getrequest(x)
+    hash_map[x] = flapjack_id
     #chemical = fj.create('chemical', name=x., description='This is a test')
+
+
 
 #{'Chemical ID': 'Chemical2', 'Chemical Owner': True, 'Chemical Name': 'ATC', 'Chemical Description': 'ChemicalB', 'Pubchem ID': 'ID1', 'SBOL Object Type': 'ComponentDefinition', 'Molecule Type': 'SmallMolecule'}
 #dict_keys(['Chemical ID', 'Chemical Owner', 'Chemical Name', 'Chemical Description', 'Pubchem ID', 'SBOL Object Type', 'Molecule Type'])
