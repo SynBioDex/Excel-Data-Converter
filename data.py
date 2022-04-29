@@ -1,106 +1,105 @@
-import csv
-import sys
-import numpy as np
 import pandas as pd
-import argparse as argp
-import configparser as conp
-from flapjack import Flapjack
-
-fj = Flapjack(url_base='local-host:8000')
-fj.log_in(username=saisam17, password=Flap123)
-
-xls = pd.ExcelFile(r"/tests/test_files/test_version7_flapjack_compiler_sbol3_v0022.xlsx")
-
-#read in skip rows from init sheet 
-
-dna_df = xls.parse('DNAs', skiprows=18)
-dna_id = dna_df.to_dict('records')
-#print(dna_id[0])
-#print(dna_id[0].keys())
-
-chemical_df = xls.parse('Chemical', skiprows=18)
-chemical_id = chemical_df.to_dict('records')
-print (chemical_df)
-#print(chemical_id[1])
-#print(chemical_id[0].keys())
-
-hash_map ={}
-for x in chemical_df.chemical_id:
-    flapjack_post_chemical_name_request(x)
-    flapjack_id = getrequest(x)
-    hash_map[x] = flapjack_id
-    #chemical = fj.create('chemical', name=x., description='This is a test')
 
 
+class Data:
+    def __init__(self, data_file_name):
+        self._xls = pd.ExcelFile(data_file_name) #validation
+        self._dna_df_dict = self._xls.parse('DNAs', skiprows=18).to_dict('index')
+        self._chemical_df_dict = self._xls.parse('Chemical', skiprows=18).to_dict('index')
+        self._signal_df_dict = self._xls.parse('Signal', skiprows=10).to_dict('index')
+        self._vector_df_dict = self._xls.parse('Vector', skiprows=18).to_dict('index')
+        self._supplement_df_dict = self._xls.parse('Supplement', skiprows=18).to_dict('index')
+        self._strain_df_dict = self._xls.parse('Strain', skiprows=18).to_dict('index')
+        self._media_df_dict = self._xls.parse('Media', skiprows=10).to_dict('index')
+        self._measurement_df_dict = self._xls.parse('Measurement', skiprows=18).to_dict('index')
+        self._sample_df_dict = self._xls.parse('Sample', skiprows=18).to_dict('index')
+        self._assay_df_dict = self._xls.parse('Assay', skiprows=18).to_dict('index')
+        self._study_df_dict = self._xls.parse('Study', skiprows=18).to_dict('index')
 
-#{'Chemical ID': 'Chemical2', 'Chemical Owner': True, 'Chemical Name': 'ATC', 'Chemical Description': 'ChemicalB', 'Pubchem ID': 'ID1', 'SBOL Object Type': 'ComponentDefinition', 'Molecule Type': 'SmallMolecule'}
-#dict_keys(['Chemical ID', 'Chemical Owner', 'Chemical Name', 'Chemical Description', 'Pubchem ID', 'SBOL Object Type', 'Molecule Type'])
+    @property
+    def dna_df_dict(self):
+        return self._dna_df_dict
 
-signal_df = xls.parse('Signal', skiprows=10)
-signal_id = signal_df.to_dict('records')
-#print(signal_id[1])
-#print(signal_id[0].keys())
+    @dna_df_dict.setter
+    def dna_df_dict(self, dna_dict):
+        self._dna_df_dict = dna_dict
 
-#add flapjack dna id from post request to vector dictionary
-vector_df = xls.parse('Vector', skiprows=18)
-vector_id = vector_df.to_dict('records')
-#print(vector_id[0])
-#print(vector_id[0].keys())
+    @property
+    def chemical_df_dict(self):
+        return self._chemical_df_dict
 
-#add flapjack chemical id from post request to supplement dictionary
-supplement_df = xls.parse('Supplement', skiprows=18)
-supplement_id = supplement_df.to_dict('records')
-#print(supplement_id[0])
-#print(supplement_id[0].keys())
+    @chemical_df_dict.setter
+    def chemical_df_dict(self, chemical_dict):
+        self._chemical_df_dict = chemical_dict
 
-strain_df = xls.parse('Strain', skiprows=18)
-strain_id = strain_df.to_dict('records')
-#print(strain_id[0])
-#print(strain_id[0].keys())
+    @property
+    def signal_df_dict(self):
+        return self._signal_df_dict
 
-media_df = xls.parse('Media', skiprows=10)
-media_id = media_df.to_dict('records')
-#print(media_id[0])
-#print(media_id[0].keys())
+    @signal_df_dict.setter
+    def signal_df_dict(self, signal_dict):
+        self._signal_df_dict = signal_dict
 
-measurement_df = xls.parse('Measurement', skiprows=18)
-measurement_id = measurement_df.to_dict('records')
-#print(measurement_id[0])
-#print(measurement_id[0].keys())
+    @property
+    def vector_df_dict(self):
+        return self._vector_df_dict
 
-#add sample design
+    @vector_df_dict.setter
+    def vector_df_dict(self, vector_dict):
+        self._vector_df_dict = vector_dict
 
-sample_df = xls.parse('Sample', skiprows=18)
-sample_id = sample_df.to_dict('records')
-#print(sample_id[0]['Study Name'])
-#print(sample_id[0].keys())
+    @property
+    def supplement_df_dict(self):
+        return self._supplement_df_dict
 
-assay_df = xls.parse('Assay', skiprows=18)
-assay_id = assay_df.to_dict('records')
-#print(assay_id[0])
-#print(assay_id[0].keys())
+    @supplement_df_dict.setter
+    def supplement_df_dict(self, supplement_dict):
+        self._supplement_df_dict = supplement_dict
 
-study_df = xls.parse('Study', skiprows=18)
-study_id = study_df.to_dict('records')
-print(study_id[0])
-print(study_id[0].keys())
+    @property
+    def strain_df_dict(self):
+        return self._strain_df_dict
 
-#samples = df.iloc[1,1]
-#put Sample Column ID from dataframe into list
-#Create dictionary and upload all Sample Column IDs as keys into dictionary
-#Use for loop to iterate over list of Sample IDs
-#For each sample ID in list, send a post request with create sample endpoint
-#Parse json for the returned sample flapjack ID
-#Assign Sample Flapjack ID as value to the Sample Column ID Key
-#Key: ID from the Spreadsheet (Chemical1, etc)
-#Value: Flapjack ID (number)
+    @strain_df_dict.setter
+    def strain_df_dict(self, strain_dict):
+        self._strain_df_dict = strain_dict
 
-# Replace the Keys with the Flapjack IDs
-# Just use one map
-# Only need one map because the keys are all unique
+    @property
+    def media_df_dict(self):
+        return self._media_df_dict
 
-#print("\n1st column as a Set:\n")
-#print(samples)
+    @media_df_dict.setter
+    def media_df_dict(self, media_dict):
+        self._media_df_dict = media_dict
 
-#signals = []
+    @property
+    def measurement_df_dict(self):
+        return self._measurement_df_dict
 
+    @measurement_df_dict.setter
+    def measurement_df_dict(self, measurement_dict):
+        self._measurement_df_dict = measurement_dict
+
+    @property
+    def sample_df_dict(self):
+        return self._sample_df_dict
+
+    @sample_df_dict.setter
+    def sample_df_dict(self, sample_dict):
+        self._sample_df_dict = sample_dict
+
+    @property
+    def assay_df_dict(self):
+        return self._assay_df_dict
+
+    @assay_df_dict.setter
+    def assay_df_dict(self, assay_dict):
+        self._assay_df_dict = assay_dict
+
+    @property
+    def study_df_dict(self):
+        return self._study_df_dict
+
+    @study_df_dict.setter
+    def study_df_dict(self, study_dict):
+        self._study_df_dict = study_dict
