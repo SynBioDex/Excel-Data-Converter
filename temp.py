@@ -9,11 +9,9 @@ import getpass
 
 hash_map = {}
 
-user = input()
-passwd = getpass.getpass()
-fj = Flapjack('flapjack.rudge-lab.org:8000') #Web Instance
-#fj = Flapjack(url_base='localhost:8000') #Local Instance
-fj.log_in(username="saisam17", password="Il0vem$her")
+#fj = Flapjack('flapjack.rudge-lab.org:8000') #Web Instance
+fj = Flapjack(url_base='localhost:8000') #Local Instance
+fj.log_in(username="saisam17", password="Flap123")
 
 xls = pd.ExcelFile(r"C:\Users\saisa\FlapjackUploadMeasurements\tests\test_files\test_version7_flapjack_compiler_sbol3_v0022.xlsx")
 
@@ -60,19 +58,21 @@ for key in supplement_dict:
     flapjack_supplement_id = create_flapjack_supplement(key, chemical_key) #.id[0]
     hash_map[key] = flapjack_supplement_id.id[0]
 
+print(hash_map)
+
 #print(hash_map)
 
-dna_df = xls.parse('DNAs', skiprows=18)
-dna_id = dna_df.to_dict('records')
-dna_dict = dna_df.to_dict('index')
+#dna_df = xls.parse('DNAs', skiprows=18)
+#dna_id = dna_df.to_dict('records')
+#dna_dict = dna_df.to_dict('index')
 
-def create_flapjack_dna(dna_key):
-    dna_name = dna_dict[dna_key]['DNA Name']
-    return fj.create('dna', name=dna_name)
+#def create_flapjack_dna(dna_key):
+    #dna_name = dna_dict[dna_key]['DNA Name']
+    #return fj.create('dna', name=dna_name)
 
-for key in dna_dict:
-    flapjack_dna_id = create_flapjack_dna(key) #.id[0]
-    hash_map[key] = flapjack_dna_id.id[0]
+#for key in dna_dict:
+    #flapjack_dna_id = create_flapjack_dna(key) #.id[0]
+    #hash_map[key] = flapjack_dna_id.id[0]
 
 vector_df = xls.parse('Vector', skiprows=18, index_col='Vector ID')
 vector_id = vector_df.to_dict('records')
@@ -144,6 +144,23 @@ for key in signal_dict:
     hash_map[key] = flapjack_signal_id.id[0]
     #print(hash_map)
 
+signal_df = xls.parse('Signal', skiprows=10, index_col='Signal ID')
+signal_id = signal_df.to_dict('records')
+signal_dict = signal_df.to_dict('index')
+
+def create_flapjack_media(key):
+    return fj.create('signal', name=signal_dict[key]['Signal Name'], description=signal_dict[key]['SignalDescription'], color=signal_dict[key]['Signal Color'])
+
+for id in signal_dict:
+    name = signal_dict[id]['Signal Name']
+    flapjack_id = get_flapjack(id)
+    hash_map[id] = flapjack_id
+    #print(hash_map)
+
+for key in signal_dict:
+    flapjack_signal_id = create_flapjack_signal(key)
+    hash_map[key] = flapjack_signal_id.id[0]
+    print(hash_map)
 #Place keys and matched flapjack_ids for Signal, Media, Supplement and Chemical into
 #one output file 'Media Designs'
 
