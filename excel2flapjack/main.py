@@ -1,15 +1,20 @@
 import pandas as pd
 from flapjack import Flapjack
 from data import Data
+import os
 
 #user = input()
 #passwd = getpass.getpass()
+direct = __file__
+test_file_path = os.path.join(os.path.split(os.path.split(direct)[0])[0], 'tests', 'test_files')
+# print(test_file_path)
+
 fj = Flapjack('flapjack.rudge-lab.org:8000')  # Web Instance
 
 def main():
     print("starting program")
     fj.log_in(username='saisam17', password='Il0vem$her')
-    xls = pd.ExcelFile(r"C:\Users\saisa\FlapjackUploadMeasurements\tests\test_files\test_version7_flapjack_compiler_sbol3_v0022.xlsx")
+    xls = pd.ExcelFile(os.path.join(test_file_path, "test_version7_flapjack_compiler_sbol3_v0022.xlsx"))
     fj_data = Data(xls)
 
     hashmap = {}
