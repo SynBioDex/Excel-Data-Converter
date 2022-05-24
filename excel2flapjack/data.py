@@ -1,8 +1,8 @@
 import pandas as pd
 
-
 class Data:
     def __init__(self, data_file_name):
+        self._hashmap = {}
         self._xls = pd.ExcelFile(data_file_name) #validation
         self._dna_df_dict = self._xls.parse('DNAs', skiprows=18).to_dict('index')
         self._chemical_df_dict = self._xls.parse('Chemical', skiprows=18).to_dict('index')
@@ -103,3 +103,11 @@ class Data:
     @study_df_dict.setter
     def study_df_dict(self, study_dict):
         self._study_df_dict = study_dict
+
+    def create_flapjack_dna(self, fj):
+       # print(self._dna_df_dict)
+        for key in self._dna_df_dict.values():
+            dna_name = key['DNA Name']
+            flapjack_dna_id = fj.create('dna', name=dna_name)
+            self._hashmap[dna_name] = flapjack_dna_id.id[0]
+        return self._hashmap
