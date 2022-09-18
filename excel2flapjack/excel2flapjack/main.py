@@ -1,73 +1,90 @@
 import pandas as pd
-from flapjack import Flapjack
-from data import Data
-import os
-
-#user = input()
-#passwd = getpass.getpass()
-direct = __file__
-test_file_path = os.path.join(os.path.split(os.path.split(direct)[0])[0], 'tests', 'test_files')
-# print(test_file_path)
-#user = input()
-# passwd = getpass.getpass()
-# fj = Flapjack('flapjack.rudge-lab.org:8000') #Web Instance
-#self._fj = Flapjack(url_base='localhost:8000')  # Local Instance
-#self._fj.log_in(username="sasa6749", password="Flap123")v
-fj = Flapjack('flapjack.rudge-lab.org:8000')  # Web Instance
-
-def main():
-    print("starting program")
-    fj.log_in(username='saisam17', password='Il0vem$her')
-    xls = pd.ExcelFile(os.path.join(test_file_path, "test_version7_flapjack_compiler_sbol3_v0022.xlsx"))
-    fj_data = Data(xls)
-    hashmap = fj_data.create_flapjack_dna(fj)
-    print(hashmap)
-    #fj_data.create_flapjack_vector(fj)
-
-    #parse_chemical_fj_ids(hashmap, fj_data.chemical_df_dict)
+import random
+# from flapjack import Flapjack
 
 
-def parse_chemical_fj_ids(hashmap, chemical_dict):
-    for chem_id in chemical_dict:
-        name = chemical_dict[chem_id]['Chemical Name']
-
-        print(name)
-        flapjack_id = get_flapjack(chemical_dict, chem_id)
-        hashmap[chem_id] = flapjack_id
-        print(hashmap)
+# this is for testing without flapjack
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+class id_thing():
+    def __init__(self, id_in):
+        self.id = [id_in]
 
 
-def get_flapjack(chemical_dict, chem_id):
-    return fj.create(chemical_dict[chem_id]['Chemical Name'], chemical_dict[chem_id]['Chemical Description'])
-    # return fj.get(chemical_dict[id]['Chemical Description'])
+class Flapjack():
+
+    def create(self, *args):
+
+        # UNCOMMENT ONE OF THE TWO
+        print(args)
+        # temp = args
+
+        return id_thing(random.randint(1, 100))
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-if __name__ == "__main__":
-    main()
+# still requires some work to ensure studies etc created too
+def flapjack_upload(fj_url, fj_user, fj_pass, excel_path):
+    hash_map = {}
 
-"""fj = Flapjack(url_base='local-host:8000')
-fj.log_in(username=saisam17, password=Flap123)
+    # UNCOMMENT BELOW TO USE FLAPJACK
+    # # log in to flapjack instance
+    # fj = Flapjack(url_base=fj_url) #Local Instance
+    # fj.log_in(username=fj_user, password=fj_pass)
 
-xls = pd.ExcelFile(r"/tests/test_files/test_version7_flapjack_compiler_sbol3_v0022.xlsx")
+    # read in Excel Data
+    xls = pd.ExcelFile(excel_path)
+    fj_conv_sht = xls.parse('FlapjackCols', skiprows=0)
 
-fj = Flapjack(url_base='localhost:8000')
-fj.log_in(username=saisam17, password=Flap123)
+    # order is important as Chemicals and DNA must be created before
+    # they can be referenced
+    types = ['Chemical', 'DNA', 'Supplement', 'Vector', 'Strain', 'Media',
+             'Signal', 'Measurement']
 
-for x in chemical_df.chemical_id:
-    flapjack_post_chemical_name_request(x)
-    # chemical = fj.create('chemical', name=x., description='This is a test')
+    # initiate hashmap for linking to chemicals
+    hash_map = {}
 
+    for obj in types:
+        # Read in the conversion sheet for col name to flapjack name
+        fj_conv_sht_obj = fj_conv_sht.loc[(fj_conv_sht['Sheet Name'] == obj)]
+        fj_conv_sht_obj = fj_conv_sht_obj.set_index('ColName').to_dict('index')
 
+        # read in the object sheet
+        obj_df = xls.parse(obj, skiprows=0, index_col=f'{obj} ID')
+        cols = list(obj_df.columns)
 
-hash_map ={}
-for x in chemical_df.chemical_id:
-    flapjack_post_chemical_name_request(x)
-    flapjack_id = getrequest(x)
-    hash_map[x] = flapjack_id
-    #chemical = fj.create('chemical', name=x., description='This is a test')
+        # drop columns not used by flapjack and rename the ones that are
+        new_cols = []
+        col_drop = []
+        for col in cols:
+            if col in fj_conv_sht_obj.keys():
+                new_cols.append(fj_conv_sht_obj[col]['FlapjackName'])
+            else:
+                col_drop.append(col)
+        obj_df = obj_df.drop(columns=col_drop)
+        obj_df.columns = new_cols
 
+        # Create a dictionary of the data for flapjack
+        obj_dict = obj_df.to_dict('index')
 
+        # REMOVE THIS LINE WHEN USING FLAPJACK
+        fj = Flapjack()
 
-#{'Chemical ID': 'Chemical2', 'Chemical Owner': True, 'Chemical Name': 'ATC', 'Chemical Description': 'ChemicalB', 'Pubchem ID': 'ID1', 'SBOL Object Type': 'ComponentDefinition', 'Molecule Type': 'SmallMolecule'}
-#dict_keys(['Chemical ID', 'Chemical Owner', 'Chemical Name', 'Chemical Description', 'Pubchem ID', 'SBOL Object Type', 'Molecule Type'])
-"""
+        # Upload all the objects to flapjack
+        for key in obj_dict:
+            data = obj_dict[key]
+
+            # Change to flapjack id rather than name for chemicals and dnas
+            if 'chemical' in data:
+                data['chemical'] = hash_map[data['chemical']]
+            elif 'dnas' in data:
+                data['dnas'] = hash_map[data['dnas']]
+
+            # CHANGE THIS WHEN USING FLAPJACK
+            # add ** infront of data later when not patched!!!!!!!!
+            # flapjack_id = fj.create(**data)
+            flapjack_id = fj.create(data)
+
+            # add Chemical and DNA to hash map to allow cross referencing
+            hash_map[key] = flapjack_id.id[0]
+
+    return hash_map
