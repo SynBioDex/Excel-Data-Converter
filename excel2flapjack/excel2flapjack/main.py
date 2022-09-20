@@ -1,25 +1,25 @@
 import pandas as pd
 import random
-# from flapjack import Flapjack
+from flapjack import Flapjack
 
 
-# this is for testing without flapjack
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-class id_thing():
-    def __init__(self, id_in):
-        self.id = [id_in]
+# # this is for testing without flapjack
+# # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# class id_thing():
+#     def __init__(self, id_in):
+#         self.id = [id_in]
 
 
-class Flapjack():
+# class Flapjack():
 
-    def create(self, *args):
+#     def create(self, *args):
 
-        # UNCOMMENT ONE OF THE TWO
-        print(args)
-        # temp = args
+#         # UNCOMMENT ONE OF THE TWO
+#         print(args)
+#         # temp = args
 
-        return id_thing(random.randint(1, 100))
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#         return id_thing(random.randint(1, 100))
+# # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 # still requires some work to ensure studies etc created too
@@ -28,8 +28,8 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path):
 
     # UNCOMMENT BELOW TO USE FLAPJACK
     # # log in to flapjack instance
-    # fj = Flapjack(url_base=fj_url) #Local Instance
-    # fj.log_in(username=fj_user, password=fj_pass)
+    fj = Flapjack(url_base=fj_url) #Local Instance
+    fj.log_in(username=fj_user, password=fj_pass)
 
     # read in Excel Data
     xls = pd.ExcelFile(excel_path)
@@ -81,8 +81,8 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path):
 
             # CHANGE THIS WHEN USING FLAPJACK
             # add ** infront of data later when not patched!!!!!!!!
-            # flapjack_id = fj.create(**data)
-            flapjack_id = fj.create(data)
+            flapjack_id = fj.create(**data)
+            # flapjack_id = fj.create(data)
 
             # add Chemical and DNA to hash map to allow cross referencing
             hash_map[key] = flapjack_id.id[0]
