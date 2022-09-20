@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(name='excel2flapjack',
       version='0.0.1-alpha-1',
-      url='https://github.com/saisam17/FlapjackUploadMeasurements/',
+      url='https://github.com/SynBioDex/Experimental-Data-Converter/',
       license='BSD 3-clause',
       maintainer='Sai Samineni',
       maintainer_email='sasa6749@colorado.edu',
