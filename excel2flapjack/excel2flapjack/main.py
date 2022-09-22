@@ -38,7 +38,7 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path):
     # order is important as Chemicals and DNA must be created before
     # they can be referenced
     types = ['Chemical', 'DNA', 'Supplement', 'Vector', 'Strain', 'Media',
-             'Signal']
+             'Signal', 'Study', 'Assay', 'Sample', 'Measurement']
     #types = ['DNA', 'Supplement', 'Vector', 'Strain', 'Media',
              #'Signal', 'Measurement']
     # initiate hashmap for linking to chemicals
@@ -75,16 +75,18 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path):
             data = obj_dict[key]
 
             # Change to flapjack id rather than name for chemicals and dnas
-            if 'chemical' in data:
-                data['chemical'] = hash_map[data['chemical']]
-            elif 'dnas' in data:
-                data['dnas'] = hash_map[data['dnas']]
+            lookups = {'chemical', 'dnas', 'study', 'vector', 'strain', 'media', 'assay', 'sample', 'signal'}
+            lk_inter = lookups.intersection(set(data.keys()))
+            print(lk_inter)
+            for it in list(lk_inter):
+                data[it] = hash_map[data[it]]
 
             # CHANGE THIS WHEN USING FLAPJACK
             # add ** infront of data later when not patched!!!!!!!!
             print(obj)
             data['model'] = obj.lower()
             print(data)
+
             flapjack_id = fj.create(**data)
             # flapjack_id = fj.create(data)
 
