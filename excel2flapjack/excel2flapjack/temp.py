@@ -1,10 +1,11 @@
 import os
+import getpass
 import excel2flapjack.main as e2f
 
 #fj_url = "localhost:8000"
 fj_url = "flapjack.rudge-lab.org:8000" #Web Instance
-fj_user = "saisam17"
-fj_pass = "Il0vem$her"
+fj_user = input()
+fj_pass = getpass.getpass()
 
 direct = __file__
 test_file_path = os.path.join(os.path.split(os.path.split(direct)[0])[0],
