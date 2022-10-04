@@ -32,7 +32,7 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path):
     fj.log_in(username=fj_user, password=fj_pass)
 
     # read in Excel Data
-    xls = pd.ExcelFile(excel_path)
+    xls = pd.read_excel(excel_path,sheet_name=None)
     fj_conv_sht = xls.parse('FlapjackCols', skiprows=0)
 
     # order is important as Chemicals and DNA must be created before
