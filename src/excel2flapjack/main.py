@@ -6,7 +6,6 @@ from flapjack import Flapjack
 def flapjack_upload(fj_url, fj_user, fj_pass, excel_path, sbol_hash_map={},
                     add_sbol_uris=False, flapjack_override=False,
                     print_progress=False):
-    hash_map = {}
 
     # UNCOMMENT BELOW TO USE FLAPJACK
     # # log in to flapjack instance
@@ -16,6 +15,7 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path, sbol_hash_map={},
     # read in Excel Data
     xls = pd.ExcelFile(excel_path)
     fj_conv_sht = xls.parse('FlapjackCols', skiprows=0)
+    fj_conv_sht.to_excel('parsed_file.xlsx') 
 
     # order is important as Chemicals and DNA must be created before
     # they can be referenced
@@ -29,10 +29,12 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path, sbol_hash_map={},
         # Read in the conversion sheet for col name to flapjack name
         fj_conv_sht_obj = fj_conv_sht.loc[(fj_conv_sht['Sheet Name'] == obj)]
         fj_conv_sht_obj = fj_conv_sht_obj.set_index('ColName').to_dict('index')
-
+        #print(fj_conv_sht_obj)
+    
         # read in the object sheet
         obj_df = xls.parse(obj, skiprows=0, index_col=f'{obj} ID')
         cols = list(obj_df.columns)
+        #obj_df.to_excel(f'obj_df_{obj}.xlsx') 
 
         # drop columns not used by flapjack and rename the ones that are
         new_cols = []
@@ -64,9 +66,10 @@ def flapjack_upload(fj_url, fj_user, fj_pass, excel_path, sbol_hash_map={},
                 data[it] = hash_map[data[it]]
 
             data['model'] = obj.lower()
+            print(data)
             flapjack_id = fj.create(**data, confirm=not(flapjack_override))
 
             # add Chemical and DNA to hash map to allow cross referencing
             hash_map[key] = flapjack_id.id[0]
-
+    
     return hash_map
