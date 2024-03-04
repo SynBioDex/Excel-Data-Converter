@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 import sys
 import pandas as pd
-from excel2flapjack.mainNew import XDC
+from excel2flapjack.mainNew import X2F
 
 # don't need any of this because we're using mock and patch
 '''
@@ -14,7 +14,7 @@ fj_pass = "coco33"
 '''
 
 # define test case class which inherits from 'unittest.TestCase' that contains tests related to initialization of XDC class
-class TestXDCInit(unittest.TestCase):
+class TestX2FInit(unittest.TestCase):
     # decorator replaces Flapjack class with a mock
     # any instantiation of Flapjack within the test will use this mock instead of the real class
     @patch('excel2flapjack.mainNew.Flapjack')
@@ -38,7 +38,7 @@ class TestXDCInit(unittest.TestCase):
         
         # Instantiate XDC with mock excel file ann test credentials
         # this is the line that actually tests the __init__ method as it involves creating the XDC object
-        xdc_instance = XDC(mock_xls, test_url, test_user, test_pass)
+        xdc_instance = X2F(mock_xls, test_url, test_user, test_pass)
         
 
         # Assertions to verify the __init__ behavior

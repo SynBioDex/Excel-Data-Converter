@@ -62,6 +62,7 @@ class X2F:
         self.xls = xls
         self.df = pd.DataFrame()
         self.hash_map = {}
+        self.del_map = {}
 
     def print_info(self, fj_sht = False, df=False, hash_map=False):
         if fj_sht:
@@ -102,6 +103,7 @@ class X2F:
 
     
     def upload_studies(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Study'].iterrows():
             fj_obj = self.fj.create(
                 'study',
@@ -110,15 +112,21 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
             # if row[DOI] is not nan patch the DOI
             if not pd.isna(row['DOI']):
                 self.fj.patch('study', fj_obj.id[0], doi=row['DOI'])
-
+        self.del_map['study'] = del_inds
 
 
     def upload_signals(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Signal'].iterrows():
             fj_obj = self.fj.create(
                 'signal',
@@ -128,11 +136,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['signal'] = del_inds
 
 
     def upload_chemicals(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Chemical'].iterrows():
             fj_obj = self.fj.create(
                 'chemical',
@@ -141,10 +156,17 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['chemical'] = del_inds
 
     def upload_dna(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'DNA'].iterrows():
             fj_obj = self.fj.create(
                 'dna',
@@ -152,11 +174,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['dna'] = del_inds
 
     
     def upload_medias(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Media'].iterrows():
             fj_obj = self.fj.create(
                 'media',
@@ -165,11 +194,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['media'] = del_inds
 
 
     def upload_strains(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Strain'].iterrows():
             fj_obj = self.fj.create(
                 'strain',
@@ -178,11 +214,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['strain'] = del_inds
 
 
     def upload_supplements(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Supplement'].iterrows():
             fj_obj = self.fj.create(
                 'supplement',
@@ -193,11 +236,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['supplement'] = del_inds
 
 
     def upload_vectors(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Vector'].iterrows():
             # print(self.df.loc[row['dna'], 'flapjackid'])
             fj_obj = self.fj.create(
@@ -208,11 +258,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['vector'] = del_inds
 
 
     def upload_assays(self, overwrite=False, confirm=False):
+        del_inds = []
         for index, row in self.df[self.df['object'] == 'Assay'].iterrows():
             fj_obj = self.fj.create(
                 'assay',
@@ -224,11 +281,18 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
+        self.del_map['assay'] = del_inds
 
 
     def upload_samples(self, overwrite=False, confirm=False):
+        del_inds = []
         # get fj ids from sample design
         for index, row in self.df[self.df['object'] == 'Sample'].iterrows():
             media_index = self.df.loc[row['sampledesign'], 'media']
@@ -249,19 +313,43 @@ class X2F:
                 confirm=confirm,
                 overwrite=overwrite,
             )
+            for i in fj_obj:
+                print(i, fj_obj[i][0])
+            print()
             self.hash_map[index] = fj_obj.id[0]
+            if fj_obj.id[0] not in del_inds:
+                del_inds.append(fj_obj.id[0])
             self.df.loc[index, 'flapjackid'] = fj_obj.id[0]
 
             if not pd.isna(row['supplement']):
                 supplement_index = self.df.loc[row['sampledesign'], 'supplement']
                 supplement_id = self.df.loc[supplement_index, 'flapjackid']
                 self.fj.patch('sample', fj_obj.id[0], supplements=supplement_id)
+        self.del_map['sample'] = del_inds
+
+
+
+    def upload_all(self):
+        self.create_df()
+        self.upload_studies()
+        self.upload_signals()
+        self.upload_chemicals()
+        self.upload_dna()
+        self.upload_medias()
+        self.upload_strains()
+        self.upload_supplements()
+        self.upload_vectors()
+        self.upload_assays()
+        self.upload_samples()
+
+    def delete_all(self):
+        for model in self.del_map:
+            for id in self.del_map[model]:
+                self.fj.delete(model, id, confirm=False)
 
 
 
 
 
-
-# will use self.fj.create to create and upload data as fj objects in create_Type methods
 
 
