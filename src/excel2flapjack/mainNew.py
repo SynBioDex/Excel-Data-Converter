@@ -2,11 +2,6 @@ import os
 import pandas as pd
 from flapjack import Flapjack
 
-""" Questions:
-    1. what is the hash_map used for?
-        - it says "for linking to chemicals" but linking what to chemicals?
-
-"""
 
 
 
@@ -26,10 +21,10 @@ class X2F:
         Instance Attributes
         ----------
         fj : flapjack.flapjack.Flapjack object
-            fj case that contains the connection to specific fj account
+            fj case that contains the connection to fj account
 
-        xls: pd.ExcelFile
-            pandas excel file
+        excel_path: path
+            path to XDC spreadsheet
 
         df : pandas dataframe  
             contains all the information from XDC file in a format that can be used by FJ
@@ -37,6 +32,12 @@ class X2F:
         hash_map: hash map
             key: name of study attributes from XDC spreadsheet
             value: corresponding flapjackID  
+
+        fj_conv_sht: dataframe
+            dataframe containing information from XDC spreadsheet FJ conversion page
+            - Sheet name: name of sheet containing rest of info
+            - ColName: name of column on 'Sheet name' containing XDC data
+            - FlapjackName: name of flapjack object corresponding to respective XDC data
 
 
     """
@@ -48,7 +49,7 @@ class X2F:
 
 
     def __init__(self, 
-                 xls, 
+                 excel_path, 
                  fj_url, 
                  fj_user, 
                  fj_pass):
@@ -57,12 +58,20 @@ class X2F:
             fj_url = fj_url + ":8000"
 
         self.fj = Flapjack(url_base=fj_url)
+        # for testing log_in, no login just returns None
+        # create a new method for this so we can call it and make sure we're logged in before running the rest of everything
         self.fj.log_in(username = fj_user, password = fj_pass)
-        self.fj_conv_sht = xls.parse('FlapjackCols', skiprows=0)
-        self.xls = xls
+
+        # convert excel path to pd.Excel File and parse
+        self.xls = pd.ExcelFile(excel_path)
+        self.fj_conv_sht = self.xls.parse('FlapjackCols', skiprows=0)
         self.df = pd.DataFrame()
         self.hash_map = {}
         self.del_map = {}
+
+    # def fj_login(fj_user, fj_pass):
+        # self.fj.log_in(username = fj_user, password=fj_pass)
+
 
     def print_info(self, fj_sht = False, df=False, hash_map=False):
         if fj_sht:
