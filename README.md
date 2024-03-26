@@ -1,8 +1,18 @@
-# Experimental Data Converter
+# Excel to Flapjack
 
-The Experimental Data Converter (XDC) is a software tool for experimental data standardization using Excel, Flapjack and SynBioHub. The XDC provides researchers with an Excel standard to capture both experimental results and contextual metadata, which are then converted to a uniform data representation for the SBOL standard and Flapjack’s data model. Through SBOL, users of XDC can store experimental results with all initial sequence, part and metadata information, as well as retrieve and share with others, improving reproducibility and collaboration.
+Excel to Flapjack (X2F) is a software tool for experimental data standardization using Excel and Flapjack. The X2F is a Python package that takes data from XDC Excel template and uploads it to Flapjack.
 
-## Installation 
+## Installation
+
+Installing X2F is super simple! 
+
+Run:
+
+`pip install excel2flapjack`
+
+This code can be executed in the terminal and in jupyter notebooks.
+
+For more details please refer to our Wiki (TODO) for installation instructions and developer guides.
 
 ## Documentation
 
