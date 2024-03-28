@@ -1,1 +1,0 @@
-This library is a collection of functions used to upload data to Flapjack from an Excel template.
