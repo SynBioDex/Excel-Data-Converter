@@ -1,6 +1,6 @@
 # Excel to Flapjack
 
-Excel to Flapjack (X2F) is a software tool for experimental data standardization using Excel and Flapjack. The X2F is a Python package that takes data from XDC Excel template and uploads it to Flapjack.
+Excel to Flapjack (X2F) is a software tool for experimental data standardization using Excel and Flapjack. The X2F is a Python package that takes data from XDC Excel template and uploads it to Flapjack[.](https://youtu.be/HgzGwKwLmgM)
 
 ## Installation
 
